@@ -1,0 +1,5 @@
+Pon aquí las imágenes de los personajes (PNG con fondo transparente):
+  krillin.png  piccolo.png  vegeta.png  gohan.png  goku.png
+
+Apenas existan, el dashboard las usa automáticamente como sprites reales.
+Recomendado: ~200x250px, fondo transparente, cuerpo completo.

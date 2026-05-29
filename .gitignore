@@ -1,0 +1,10 @@
+# NUNCA subir secretos
+.env
+
+# Dependencias (se reinstalan con "npm install")
+node_modules/
+
+# Sistema / editores
+.DS_Store
+*.log
+npm-debug.log*
