@@ -3,145 +3,178 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Agentes-Z · PAGASI</title>
+    <title>Agentes·Z — Command Center · PAGASI</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="stars"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
 
-    <header>
-      <h1>🐉 AGENTES-Z</h1>
-      <p class="subtitle">Centro de mando · equipo de IA que vende <strong>PAGASI</strong></p>
-      <span id="modeBadge" class="badge">conectando…</span>
+    <!-- ░░ TOP BAR ░░ -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand__mark">Z</div>
+        <div class="brand__txt">
+          <h1>AGENTES·Z</h1>
+          <span>Command Center · PAGASI</span>
+        </div>
+      </div>
+      <div class="topbar__right">
+        <div class="conn"><span class="conn__dot"></span> en vivo</div>
+        <span id="modeBadge" class="badge">conectando…</span>
+      </div>
     </header>
 
-    <!-- Cómo funciona: el flujo de un vistazo -->
-    <section class="flow">
-      <div class="step"><span class="num">1</span><div><strong>🔍 Krillin busca</strong><small>prospectos reales y filtra los que no encajan</small></div></div>
-      <div class="arrow">→</div>
-      <div class="step"><span class="num">2</span><div><strong>✍️ Vegeta escribe</strong><small>el mensaje de venta personalizado</small></div></div>
-      <div class="arrow">→</div>
-      <div class="step"><span class="num">3</span><div><strong>🛡️ Goku revisa</strong><small>corrige y aprueba (cuida tu credibilidad)</small></div></div>
-      <div class="arrow">→</div>
-      <div class="step"><span class="num">4</span><div><strong>👍 Tú apruebas</strong><small>y lo envías con un par de clics</small></div></div>
-    </section>
-
-    <!-- MAPA estilo Dragon Ball: los personajes vuelan a su zona a trabajar -->
-    <section class="map" id="arena">
-      <div class="ground"></div>
-      <div class="kame">🏠</div>
-      <div class="cloud c1"></div>
-      <div class="cloud c2"></div>
-
-      <div class="zone z-search">🔍 Búsqueda</div>
-      <div class="zone z-research">🕵️ Investigación</div>
-      <div class="zone z-write">✍️ Redacción</div>
-      <div class="zone z-content">📚 Contenido</div>
-      <div class="zone z-review">🛡️ Revisión</div>
-
-      <div class="fighter" data-key="krillin">
-        <div class="sparks"><span></span><span></span><span></span><span></span></div>
-        <div class="ring"></div><div class="aura"></div>
-        <div class="char krillin"><div class="head"></div><div class="body"></div></div>
-        <div class="nameplate"><strong>Krillin</strong><span class="role">Prospecta</span></div>
-        <div class="kibar"><div class="kifill"></div></div>
-        <div class="status">En reposo</div>
-      </div>
-
-      <div class="fighter" data-key="piccolo">
-        <div class="sparks"><span></span><span></span><span></span><span></span></div>
-        <div class="ring"></div><div class="aura"></div>
-        <div class="char piccolo"><div class="ant ant-l"></div><div class="ant ant-r"></div><div class="head"></div><div class="cape"></div><div class="body"></div></div>
-        <div class="nameplate"><strong>Piccolo</strong><span class="role">Investiga</span></div>
-        <div class="kibar"><div class="kifill"></div></div>
-        <div class="status">En reposo</div>
-      </div>
-
-      <div class="fighter" data-key="vegeta">
-        <div class="sparks"><span></span><span></span><span></span><span></span></div>
-        <div class="ring"></div><div class="aura"></div>
-        <div class="char vegeta"><div class="hair"></div><div class="head"></div><div class="body"></div></div>
-        <div class="nameplate"><strong>Vegeta</strong><span class="role">Outreach</span></div>
-        <div class="kibar"><div class="kifill"></div></div>
-        <div class="status">En reposo</div>
-      </div>
-
-      <div class="fighter" data-key="gohan">
-        <div class="sparks"><span></span><span></span><span></span><span></span></div>
-        <div class="ring"></div><div class="aura"></div>
-        <div class="char gohan"><div class="hair"></div><div class="head"></div><div class="body"></div></div>
-        <div class="nameplate"><strong>Gohan</strong><span class="role">Contenido</span></div>
-        <div class="kibar"><div class="kifill"></div></div>
-        <div class="status">En reposo</div>
-      </div>
-
-      <div class="fighter" data-key="goku">
-        <div class="sparks"><span></span><span></span><span></span><span></span></div>
-        <div class="ring"></div><div class="aura"></div>
-        <div class="char goku"><div class="hair"></div><div class="head"></div><div class="body"></div></div>
-        <div class="nameplate"><strong>Goku</strong><span class="role">Revisor</span></div>
-        <div class="kibar"><div class="kifill"></div></div>
-        <div class="status">En reposo</div>
-      </div>
-    </section>
-
-    <!-- CONTROLES -->
-    <section class="control">
-      <h2>⚡ Buscar clientes</h2>
-      <p class="hint">Krillin saldrá a buscar empresas reales que dan crédito a cuotas en el lugar que indiques.</p>
-      <div class="form">
-        <label>¿En qué país o ciudad?
-          <input id="mercado" type="text" placeholder="Ej: Guatemala, San Salvador…" />
-        </label>
-        <label>¿Qué tipo de empresa?
-          <input id="tipo" type="text" value="financieras de motos y casas comerciales que dan crédito" />
-        </label>
-        <label>¿Cuántas?
-          <input id="cantidad" type="number" value="3" min="1" max="25" />
-        </label>
-        <button id="startBtn">⚡ ¡Lanzar misión!</button>
-      </div>
-    </section>
-
-    <section class="control">
-      <h2>📚 Crear contenido (Gohan)</h2>
-      <p class="hint">Gohan escribe posts de autoridad para tu LinkedIn sobre el tema que elijas.</p>
-      <div class="form form2">
-        <label>Tema del contenido
-          <input id="tema" type="text" value="cómo reducir la mora en financiamiento a cuotas" />
-        </label>
-        <button id="contentBtn">📚 Generar contenido</button>
-      </div>
-    </section>
-
-    <div class="grid">
-      <section class="queue">
-        <h2>📨 Por revisar <span id="queueCount" class="count">0</span></h2>
-        <p class="hint">Mensajes listos esperando tu visto bueno. Aprueba los que te gusten.</p>
-        <div id="leads"></div>
+    <main class="wrap">
+      <!-- ░░ KPIs ░░ -->
+      <section class="kpis">
+        <div class="kpi">
+          <div class="kpi__icon">🎯</div>
+          <div class="kpi__num" id="kpiTotal" data-v="0">0</div>
+          <div class="kpi__label">Prospectos</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__icon">📨</div>
+          <div class="kpi__num" id="kpiPending" data-v="0">0</div>
+          <div class="kpi__label">Por revisar</div>
+        </div>
+        <div class="kpi kpi--accent">
+          <div class="kpi__icon">⚔️</div>
+          <div class="kpi__num" id="kpiReady" data-v="0">0</div>
+          <div class="kpi__label">Listos para enviar</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__icon">📝</div>
+          <div class="kpi__num" id="kpiPosts" data-v="0">0</div>
+          <div class="kpi__label">Contenido</div>
+        </div>
       </section>
 
-      <section class="log">
-        <h2>📜 Bitácora</h2>
-        <div id="log"></div>
+      <!-- ░░ ROSTER DE AGENTES ░░ -->
+      <section class="panel">
+        <div class="panel__head">
+          <h2>Escuadrón</h2>
+          <span class="panel__sub">tus 5 agentes de IA — vuelan a trabajar en tiempo real</span>
+        </div>
+        <div class="roster">
+          <article class="agent" data-key="krillin">
+            <div class="agent__halo"></div>
+            <div class="agent__stage"><div class="char"></div></div>
+            <div class="agent__meta">
+              <div class="agent__name">Krillin <span class="agent__live">●</span></div>
+              <div class="agent__role">Prospectador</div>
+              <div class="agent__bar"><i></i></div>
+              <div class="agent__status status">En reposo</div>
+            </div>
+          </article>
+
+          <article class="agent" data-key="piccolo">
+            <div class="agent__halo"></div>
+            <div class="agent__stage"><div class="char"></div></div>
+            <div class="agent__meta">
+              <div class="agent__name">Piccolo <span class="agent__live">●</span></div>
+              <div class="agent__role">Investigador</div>
+              <div class="agent__bar"><i></i></div>
+              <div class="agent__status status">En reposo</div>
+            </div>
+          </article>
+
+          <article class="agent" data-key="vegeta">
+            <div class="agent__halo"></div>
+            <div class="agent__stage"><div class="char"></div></div>
+            <div class="agent__meta">
+              <div class="agent__name">Vegeta <span class="agent__live">●</span></div>
+              <div class="agent__role">Outreach</div>
+              <div class="agent__bar"><i></i></div>
+              <div class="agent__status status">En reposo</div>
+            </div>
+          </article>
+
+          <article class="agent" data-key="gohan">
+            <div class="agent__halo"></div>
+            <div class="agent__stage"><div class="char"></div></div>
+            <div class="agent__meta">
+              <div class="agent__name">Gohan <span class="agent__live">●</span></div>
+              <div class="agent__role">Contenido</div>
+              <div class="agent__bar"><i></i></div>
+              <div class="agent__status status">En reposo</div>
+            </div>
+          </article>
+
+          <article class="agent agent--boss" data-key="goku">
+            <div class="agent__halo"></div>
+            <div class="agent__stage"><div class="char"></div></div>
+            <div class="agent__meta">
+              <div class="agent__name">Goku <span class="agent__crown">👑</span> <span class="agent__live">●</span></div>
+              <div class="agent__role">Revisor</div>
+              <div class="agent__bar"><i></i></div>
+              <div class="agent__status status">En reposo</div>
+            </div>
+          </article>
+        </div>
       </section>
-    </div>
 
-    <section class="ready">
-      <h2>⚔️ Listos para enviar <span id="readyCount" class="count">0</span>
-        <a class="export" href="/api/leads.csv">⬇️ Exportar CSV</a>
-      </h2>
-      <p class="hint">Aprobados. Dale a WhatsApp o LinkedIn: abre directo al cliente con el mensaje listo, tú solo envías.</p>
-      <div id="readyLeads"></div>
-    </section>
+      <!-- ░░ MISSION CONTROL ░░ -->
+      <section class="controls">
+        <div class="card control">
+          <div class="control__title">⚡ Buscar clientes</div>
+          <p class="control__hint">Krillin sale a buscar empresas reales que dan crédito a cuotas.</p>
+          <div class="field">
+            <label>País o ciudad</label>
+            <input id="mercado" type="text" placeholder="Ej: Colombia, Bogotá…" />
+          </div>
+          <div class="field">
+            <label>Tipo de empresa</label>
+            <input id="tipo" type="text" value="financieras y distribuidoras de motos que dan crédito" />
+          </div>
+          <div class="field field--row">
+            <div>
+              <label>Cantidad</label>
+              <input id="cantidad" type="number" value="3" min="1" max="25" />
+            </div>
+            <button id="startBtn" class="btn btn--primary">⚡ Lanzar misión</button>
+          </div>
+        </div>
 
-    <section class="posts">
-      <h2>📝 Contenido para revisar <span id="postCount" class="count">0</span></h2>
-      <div id="posts"></div>
-    </section>
+        <div class="card control">
+          <div class="control__title">📝 Crear contenido</div>
+          <p class="control__hint">Gohan escribe posts de autoridad para tu LinkedIn.</p>
+          <div class="field">
+            <label>Tema del contenido</label>
+            <input id="tema" type="text" value="cómo reducir la mora en financiamiento a cuotas" />
+          </div>
+          <div class="field field--row">
+            <span class="control__spacer"></span>
+            <button id="contentBtn" class="btn btn--secondary">📝 Generar contenido</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ░░ PIPELINE + ACTIVITY ░░ -->
+      <section class="board">
+        <div class="card board__main">
+          <div class="tabs" role="tablist">
+            <button class="tab is-active" data-tab="pending">Por revisar <span class="pill" id="tabPending">0</span></button>
+            <button class="tab" data-tab="ready">Listos <span class="pill" id="tabReady">0</span></button>
+            <button class="tab" data-tab="content">Contenido <span class="pill" id="tabContent">0</span></button>
+            <a class="tab tab--export" href="/api/leads.csv">⬇️ CSV</a>
+          </div>
+          <div class="tabpanes">
+            <div class="tabpane is-active" data-pane="pending"><div id="leads"></div></div>
+            <div class="tabpane" data-pane="ready"><div id="readyLeads"></div></div>
+            <div class="tabpane" data-pane="content"><div id="posts"></div></div>
+          </div>
+        </div>
+
+        <div class="card feed">
+          <div class="feed__head"><span class="feed__pulse"></span> Actividad en vivo</div>
+          <div id="log" class="feed__list"></div>
+        </div>
+      </section>
+    </main>
 
     <div id="toast" class="toast"></div>
-
     <script src="app.js"></script>
   </body>
 </html>
