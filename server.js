@@ -2,7 +2,7 @@ import "./env.js"; // carga .env ANTES de importar el resto
 import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { bus, state, runMission, runContentMission, decideLead, decidePost } from "./orchestrator.js";
+import { bus, state, runMission, runContentMission, decideLead, decidePost, setEtapa, generarFollowup } from "./orchestrator.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -31,11 +31,23 @@ app.post("/api/content/start", (req, res) => {
   res.json({ ok: true, tema });
 });
 
-// Aprobar / rechazar un lead.
-app.post("/api/lead/:id/:decision", (req, res) => {
+// Aprobar / rechazar un lead. (:decision restringido para no chocar con /etapa y /followup)
+app.post("/api/lead/:id/:decision(approve|reject)", (req, res) => {
   const id = parseInt(req.params.id);
   const decision = req.params.decision === "approve" ? "approved" : "rejected";
   const lead = decideLead(id, decision);
+  res.json({ ok: !!lead, lead });
+});
+
+// CRM: avanzar un lead de etapa. body: { etapa }
+app.post("/api/lead/:id/etapa", (req, res) => {
+  const lead = setEtapa(parseInt(req.params.id), (req.body?.etapa || "").trim());
+  res.json({ ok: !!lead, lead });
+});
+
+// Generar un follow-up (Vegeta + Goku) para un lead.
+app.post("/api/lead/:id/followup", async (req, res) => {
+  const lead = await generarFollowup(parseInt(req.params.id));
   res.json({ ok: !!lead, lead });
 });
 

@@ -1,5 +1,25 @@
 [
   {
+    "id": 4,
+    "empresa": "Global Go",
+    "sector": "Financiamiento digital de motos",
+    "ubicacion": "Perú",
+    "sitio": "www.globalgo.com.pe",
+    "senal": "Especializada en financiamiento accesible de motos, plazos de 12-24 meses, proceso ágil, probable gestión de cartera manual o semitecnológica",
+    "tamano": "pyme",
+    "fit": 4,
+    "contacto_nombre": "",
+    "contacto_cargo": "Gerente Comercial / Jefe de Cobranza",
+    "perfil": "Global Go es una fintech peruana especializada en financiamiento digital de motocicletas. Ofrece créditos con cuotas semanales flexibles (12, 18 o 24 meses) con proceso 100% digital y preaprobación en minutos. Opera con alianzas con marcas como Bajaj, Honda, Suzuki, TVS, Bajaj y otras.",
+    "telefono": "",
+    "linkedin": "https://www.linkedin.com/company/global-go-financiera-motos",
+    "email": "",
+    "mensaje": "Hola,\n\nSoy [Tu nombre] de Maben, desarrollamos software a la medida para fintech.\n\nVi que Global Go se especializa en financiamiento de motos con plazos de 12 a 24 meses. En ese modelo, gestionar el ritmo de cobranza y detectar riesgos a tiempo antes de que escalen a defaults marca la diferencia, especialmente en segmentos con poca o nula bancarización.\n\nTenemos un cliente en financiamiento de motos que hoy gestiona 100+ créditos activos y ha logrado mantener su morosidad en 0% trabajando con PAGASI, nuestro sistema de gestión de cartera con análisis predictivo. Lo que destacan es que pudieron optimizar la recuperación sin deteriorar la relación con sus clientes.\n\n¿Te vendría bien explorar en 20 minutos cómo lo están haciendo y si tiene sentido para Global Go?\n\n[Tu nombre] · Maben\n🌐 maben.io · ✉️ info@maben.io",
+    "notaRevisor": "El fit es sólido (financiera de motos en Perú, gestión de cartera, probable proceso manual/semitecnológico). El dato de 100+ créditos con 0% de morosidad es real y verificable con un cliente nuestro, pero el mensaje original lo presentaba de forma ambigua ('0% de morosidad') que podría leerse como promesa o como mérito exclusivo del software, cuando en realidad es un resultado conjunto del cliente + PAGASI en un contexto específico. Se corrige esa frase para contextualizarla honestamente. También se elimina la suposición de 'créditos semanales' que no está confirmada en la señal del lead (el sitio indica plazos 12-24 meses, no frecuencia semanal de cuotas necesariamente), reemplazándola por algo más neutro y verificable.",
+    "status": "approved",
+    "createdAt": "2026-05-29T19:54:32.460Z"
+  },
+  {
     "id": 3,
     "empresa": "Max Crédito",
     "sector": "Financiera de motos",

@@ -1,5 +1,5 @@
-// El orquestador: coordina a Krillin (prospecta), Vegeta (redacta outreach)
-// y Goku (revisa/aprueba). Esto es CÓDIGO normal, no IA — aquí no se gasta nada.
+// El orquestador: coordina a SCOUT (prospecta), ENVOY (redacta outreach)
+// y WARDEN (revisa/aprueba). Esto es CÓDIGO normal, no IA — aquí no se gasta nada.
 import { EventEmitter } from "node:events";
 import fs from "node:fs";
 import path from "node:path";
@@ -44,11 +44,11 @@ export const state = {
   simMode: SIM_MODE,
   mission: { running: false, brief: null, log: [] },
   agents: {
-    krillin: { name: "Krillin", role: "Prospectador", status: "idle" },
-    piccolo: { name: "Piccolo", role: "Investigador", status: "idle" },
-    vegeta: { name: "Vegeta", role: "Outreach", status: "idle" },
-    gohan: { name: "Gohan", role: "Contenido", status: "idle" },
-    goku: { name: "Goku", role: "Revisor", status: "idle" },
+    krillin: { name: "SCOUT", role: "Prospectador", status: "idle" },
+    piccolo: { name: "RECON", role: "Investigador", status: "idle" },
+    vegeta: { name: "ENVOY", role: "Outreach", status: "idle" },
+    gohan: { name: "SCRIBE", role: "Contenido", status: "idle" },
+    goku: { name: "WARDEN", role: "Revisor", status: "idle" },
   },
   leads: loadLeads(),
   posts: loadPosts(),
@@ -92,11 +92,25 @@ function log(msg) {
 }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// Normaliza un nombre de empresa para detectar duplicados (sin acentos, sufijos ni símbolos).
+function normNombre(s = "") {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/\b(s\.?a\.?s?|ltda|cia|compania|inc|llc|group|grupo)\b/g, "")
+    .replace(/[^a-z0-9]/g, "")
+    .trim();
+}
+
+// Etapas del pipeline (CRM).
+export const ETAPAS = ["por_revisar", "por_contactar", "contactado", "respondio", "demo", "ganado", "perdido", "descartado"];
+
 // ---------- AGENTES ----------
 
 async function krillinProspecta(brief) {
   setAgent("krillin", "working");
-  log(`🥋 Krillin sale a buscar prospectos en: ${brief.mercado}`);
+  log(`▸ SCOUT sale a buscar prospectos en: ${brief.mercado}`);
 
   // Busca DE MÁS (pool) para que, tras filtrar gigantes, queden suficientes PYMEs.
   const pool = Math.min(brief.cantidad * 3, 12);
@@ -139,18 +153,18 @@ ${hallazgos}`,
     .filter((l) => l && typeof l.empresa === "string" && l.empresa.trim().length > 2 && !BASURA.test(l.empresa))
     .slice(0, pool);
 
-  log(`🥋 Krillin encontró ${leads.length} prospecto(s) real(es) (buscó hasta ${pool}).`);
+  log(`▸ SCOUT encontró ${leads.length} prospecto(s) real(es) (buscó hasta ${pool}).`);
   setAgent("krillin", "idle");
   return leads;
 }
 
 async function piccoloInvestiga(lead, brief) {
   setAgent("piccolo", "working");
-  log(`🟢 Piccolo investiga a fondo a "${lead.empresa}"...`);
+  log(`🟢 RECON investiga a fondo a "${lead.empresa}"...`);
   let info;
   if (SIM_MODE) {
     await sleep(1100);
-    info = simPiccolo(lead);
+    info = simRECON(lead);
   } else {
     const text = await ask({
       role: "worker",
@@ -182,7 +196,7 @@ async function vegetaRedacta(lead, info, brief) {
         "Eres un copywriter de ventas B2B cálido y MUY humano (que no suene a IA ni a plantilla). Escribes en nombre de MABEN, una empresa que desarrolla software a la medida (web: maben.io, email: info@maben.io). Mensajes cortos y concisos (90-120 palabras), en español de LATAM, con un toque cercano. REGLAS DE HONESTIDAD: nunca afirmes ni asumas problemas internos del prospecto que no puedas saber; presenta el caso de éxito propio como dato verificable, no como promesa para ellos.",
       prompt: `Escribe un mensaje de LinkedIn/email para ${saludo} de "${lead.empresa}".
 Quién escribe: Maben (software a la medida). Producto estrella: PAGASI, sistema de gestión de créditos a cuotas.
-Investigación de Piccolo sobre esta empresa:
+Investigación de RECON sobre esta empresa:
 - Perfil: ${info.perfil || "(n/d)"}
 - Ángulo/gancho más fuerte: ${info.gancho || lead.senal || "da crédito a cuotas"}
 - Reto probable (hipótesis honesta): ${info.dolor_probable || "(n/d)"}
@@ -222,7 +236,7 @@ Devuelve SOLO JSON: {"veredicto":"aprobado"|"rechazado","motivo":"...","mensaje_
 
 async function gohanContenido(tema) {
   setAgent("gohan", "working");
-  log(`📚 Gohan escribe contenido para LinkedIn: "${tema}"`);
+  log(`📚 SCRIBE escribe contenido para LinkedIn: "${tema}"`);
   let posts;
   if (SIM_MODE) {
     await sleep(1400);
@@ -238,7 +252,7 @@ Devuelve SOLO un array JSON: [{"titulo","post"}].`,
     });
     posts = parseJson(text, []).slice(0, 3);
   }
-  log(`📚 Gohan generó ${posts.length} borradores de contenido.`);
+  log(`📚 SCRIBE generó ${posts.length} borradores de contenido.`);
   setAgent("gohan", "idle");
   return posts;
 }
@@ -275,8 +289,16 @@ export async function runMission(brief) {
     const prospectos = await krillinProspecta(brief);
     let aprobados = 0;
     let primero = true;
+    // MEMORIA: nombres que ya están en tu base, para no repetir ni recontactar.
+    const yaConocidos = new Set(state.leads.map((l) => normNombre(l.empresa)));
     for (const p of prospectos) {
       if (aprobados >= brief.cantidad) break; // ya tenemos los que pediste
+      const norm = normNombre(p.empresa);
+      if (yaConocidos.has(norm)) {
+        log(`🔁 "${p.empresa}" ya estaba en tu base — lo salto (sin repetir).`);
+        continue;
+      }
+      yaConocidos.add(norm);
       if (!primero) await sleep(3000); // respira para no saturar el límite/min
       primero = false;
       const filtro = pasaFiltro(p);
@@ -285,18 +307,18 @@ export async function runMission(brief) {
         continue;
       }
       const info = await piccoloInvestiga(p, brief);
-      // SEGUNDO FILTRO: con la investigación profunda de Piccolo, descarta gigantes
-      // que Krillin no detectó (sus señales aparecen recién aquí).
+      // SEGUNDO FILTRO: con la investigación profunda de RECON, descarta gigantes
+      // que SCOUT no detectó (sus señales aparecen recién aquí).
       const tr = String(info.tamano_real || "").toLowerCase();
       if (info.es_buen_fit === false || tr.includes("grande") || tr.includes("corporativo") ||
           SENALES_GIGANTE.test(`${info.perfil} ${info.dolor_probable} ${info.gancho}`)) {
-        log(`⛔ Piccolo descartó "${p.empresa}": tras investigarlo resultó ${info.tamano_real || "no-PYME"} (gigante/banco/fintech). No encaja.`);
+        log(`⛔ RECON descartó "${p.empresa}": tras investigarlo resultó ${info.tamano_real || "no-PYME"} (gigante/banco/fintech). No encaja.`);
         continue;
       }
       const mensaje = await vegetaRedacta(p, info, brief);
       const review = await gokuRevisa(p, mensaje);
       if (review.veredicto === "rechazado") {
-        log(`🟠 Goku rechazó "${p.empresa}": ${review.motivo}`);
+        log(`🟠 WARDEN rechazó "${p.empresa}": ${review.motivo}`);
         continue;
       }
       const lead = {
@@ -317,13 +339,16 @@ export async function runMission(brief) {
         mensaje: review.mensaje_corregido || mensaje,
         notaRevisor: review.motivo || "",
         status: "pending",
+        etapa: "por_revisar",
+        followups: [],
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
       state.leads.unshift(lead);
       saveLeads();
       emit("lead", lead);
       aprobados++;
-      log(`✅ Goku aprobó "${p.empresa}" (${aprobados}/${brief.cantidad}) → en cola.`);
+      log(`✅ WARDEN aprobó "${p.empresa}" (${aprobados}/${brief.cantidad}) → en cola.`);
     }
     if (aprobados === 0) {
       log("⚠️ Esta vez no quedó ningún lead. Prueba otra ciudad/tipo o sube la cantidad.");
@@ -351,7 +376,7 @@ export async function runContentMission(tema) {
     for (const b of borradores) {
       const review = await gokuRevisaPost(b);
       if (review.veredicto === "rechazado") {
-        log(`🟠 Goku rechazó un post: ${review.motivo}`);
+        log(`🟠 WARDEN rechazó un post: ${review.motivo}`);
         continue;
       }
       const post = {
@@ -365,7 +390,7 @@ export async function runContentMission(tema) {
       state.posts.unshift(post);
       savePosts();
       emit("post", post);
-      log(`✅ Goku aprobó contenido: "${post.titulo}".`);
+      log(`✅ WARDEN aprobó contenido: "${post.titulo}".`);
     }
     log("🏁 Misión de contenido completada.");
   } catch (err) {
@@ -391,8 +416,64 @@ export function decideLead(id, decision) {
   const lead = state.leads.find((l) => l.id === id);
   if (!lead) return null;
   lead.status = decision; // "approved" | "rejected"
+  lead.etapa = decision === "approved" ? "por_contactar" : "descartado";
+  lead.updatedAt = new Date().toISOString();
   saveLeads();
-  emit("leadUpdate", { id, status: decision });
+  emit("leadUpdate", { id, lead });
+  return lead;
+}
+
+// CRM: avanzar un lead por el pipeline.
+export function setEtapa(id, etapa) {
+  const lead = state.leads.find((l) => l.id === id);
+  if (!lead || !ETAPAS.includes(etapa)) return null;
+  lead.etapa = etapa;
+  if (etapa === "descartado") lead.status = "rejected";
+  lead.updatedAt = new Date().toISOString();
+  saveLeads();
+  emit("leadUpdate", { id, lead });
+  return lead;
+}
+
+// Follow-up: ENVOY redacta el siguiente mensaje, WARDEN lo revisa.
+export async function generarFollowup(id) {
+  const lead = state.leads.find((l) => l.id === id);
+  if (!lead) return null;
+  lead.followups = lead.followups || [];
+  const n = lead.followups.length + 1;
+  log(`🔁 ENVOY redacta el follow-up #${n} para "${lead.empresa}"...`);
+
+  let texto;
+  if (SIM_MODE) {
+    setAgent("vegeta", "working");
+    await sleep(900);
+    setAgent("vegeta", "idle");
+    texto = simFollowup(lead, n);
+  } else {
+    const saludo = lead.contacto_nombre || `equipo de ${lead.empresa}`;
+    const previos = [lead.mensaje, ...lead.followups.map((f) => f.texto)].join("\n--- (mensaje anterior) ---\n");
+    setAgent("vegeta", "working");
+    const draft = await ask({
+      role: "worker",
+      system:
+        "Eres un copywriter cálido y MUY humano que escribe en nombre de MABEN (software a la medida, maben.io, info@maben.io). Escribes mensajes de SEGUIMIENTO cortos para B2B en español de LATAM. No repites lo ya dicho, no presionas ni culpabilizas; aportas un ángulo nuevo o un recordatorio amable.",
+      prompt: `Ya le escribiste a ${saludo} de "${lead.empresa}" y aún no responde. Escribe el SEGUIMIENTO #${n}, muy breve (45-75 palabras), humano, con un ángulo fresco (un beneficio concreto, una pregunta distinta o un dato útil). Recuerda el caso real: un cliente nuestro maneja 100+ créditos con 0% de morosidad usando PAGASI. Cierra con una pregunta suave. Firma "[Tu nombre] · Maben\\n🌐 maben.io · ✉️ info@maben.io".
+
+Mensajes previos (NO los repitas):
+${previos}
+
+Devuelve SOLO el texto del seguimiento.`,
+    });
+    setAgent("vegeta", "idle");
+    const review = await gokuRevisa(lead, draft);
+    texto = review.veredicto === "rechazado" ? draft : review.mensaje_corregido || draft;
+  }
+
+  lead.followups.push({ texto, fecha: new Date().toISOString() });
+  lead.updatedAt = new Date().toISOString();
+  saveLeads();
+  emit("leadUpdate", { id, lead });
+  log(`✅ Follow-up #${n} listo para "${lead.empresa}".`);
   return lead;
 }
 
@@ -422,7 +503,7 @@ function simPosts(tema) {
   ];
 }
 
-function simPiccolo(lead) {
+function simRECON(lead) {
   return {
     contacto_nombre: "",
     contacto_cargo: "Gerente Comercial",
@@ -436,6 +517,18 @@ function simPiccolo(lead) {
     es_buen_fit: true,
     fuente: "sitio web (simulado)",
   };
+}
+
+function simFollowup(lead, n) {
+  return `Hola de nuevo 👋, sé que el día a día es intenso, así que seré breve.
+
+Pensé en ${lead.empresa} porque justo ayudamos a una financiera de motos a llevar su mora a 0% automatizando los recaudos con PAGASI. Si te sirve, te paso un caso de 1 página sin que tengamos que agendar nada todavía.
+
+¿Te lo envío?
+
+Un abrazo,
+[Tu nombre] · Maben
+🌐 maben.io · ✉️ info@maben.io`;
 }
 
 function simMensaje(lead, info = {}) {

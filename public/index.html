@@ -3,25 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Agentes·Z — Command Center · PAGASI</title>
+    <title>AGENTES·Z // sistema</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="bg-grid"></div>
-    <div class="bg-orb orb-1"></div>
-    <div class="bg-orb orb-2"></div>
+    <canvas id="rain"></canvas>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
 
     <!-- ░░ TOP BAR ░░ -->
     <header class="topbar">
       <div class="brand">
-        <div class="brand__mark">Z</div>
+        <div class="brand__mark">&gt;_</div>
         <div class="brand__txt">
           <h1>AGENTES·Z</h1>
-          <span>Command Center · PAGASI</span>
+          <span class="blink">// command line · PAGASI</span>
         </div>
       </div>
       <div class="topbar__right">
-        <div class="conn"><span class="conn__dot"></span> en vivo</div>
+        <div class="conn"><span class="conn__dot"></span> SYSTEM ONLINE</div>
         <span id="modeBadge" class="badge">conectando…</span>
       </div>
     </header>
@@ -29,136 +29,46 @@
     <main class="wrap">
       <!-- ░░ KPIs ░░ -->
       <section class="kpis">
-        <div class="kpi">
-          <div class="kpi__icon">🎯</div>
-          <div class="kpi__num" id="kpiTotal" data-v="0">0</div>
-          <div class="kpi__label">Prospectos</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__icon">📨</div>
-          <div class="kpi__num" id="kpiPending" data-v="0">0</div>
-          <div class="kpi__label">Por revisar</div>
-        </div>
-        <div class="kpi kpi--accent">
-          <div class="kpi__icon">⚔️</div>
-          <div class="kpi__num" id="kpiReady" data-v="0">0</div>
-          <div class="kpi__label">Listos para enviar</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__icon">📝</div>
-          <div class="kpi__num" id="kpiPosts" data-v="0">0</div>
-          <div class="kpi__label">Contenido</div>
-        </div>
+        <div class="kpi"><div class="kpi__label">// objetivos</div><div class="kpi__num" id="kpiTotal" data-v="0">0</div></div>
+        <div class="kpi"><div class="kpi__label">// en cola</div><div class="kpi__num" id="kpiPending" data-v="0">0</div></div>
+        <div class="kpi kpi--accent"><div class="kpi__label">// listos</div><div class="kpi__num" id="kpiReady" data-v="0">0</div></div>
+        <div class="kpi"><div class="kpi__label">// contenido</div><div class="kpi__num" id="kpiPosts" data-v="0">0</div></div>
       </section>
 
-      <!-- ░░ ROSTER DE AGENTES ░░ -->
+      <!-- ░░ OPERATIVOS ░░ -->
       <section class="panel">
-        <div class="panel__head">
-          <h2>Escuadrón</h2>
-          <span class="panel__sub">tus 5 agentes de IA — vuelan a trabajar en tiempo real</span>
-        </div>
-        <div class="roster">
-          <article class="agent" data-key="krillin">
-            <div class="agent__halo"></div>
-            <div class="agent__stage"><div class="char"></div></div>
-            <div class="agent__meta">
-              <div class="agent__name">Krillin <span class="agent__live">●</span></div>
-              <div class="agent__role">Prospectador</div>
-              <div class="agent__bar"><i></i></div>
-              <div class="agent__status status">En reposo</div>
-            </div>
-          </article>
-
-          <article class="agent" data-key="piccolo">
-            <div class="agent__halo"></div>
-            <div class="agent__stage"><div class="char"></div></div>
-            <div class="agent__meta">
-              <div class="agent__name">Piccolo <span class="agent__live">●</span></div>
-              <div class="agent__role">Investigador</div>
-              <div class="agent__bar"><i></i></div>
-              <div class="agent__status status">En reposo</div>
-            </div>
-          </article>
-
-          <article class="agent" data-key="vegeta">
-            <div class="agent__halo"></div>
-            <div class="agent__stage"><div class="char"></div></div>
-            <div class="agent__meta">
-              <div class="agent__name">Vegeta <span class="agent__live">●</span></div>
-              <div class="agent__role">Outreach</div>
-              <div class="agent__bar"><i></i></div>
-              <div class="agent__status status">En reposo</div>
-            </div>
-          </article>
-
-          <article class="agent" data-key="gohan">
-            <div class="agent__halo"></div>
-            <div class="agent__stage"><div class="char"></div></div>
-            <div class="agent__meta">
-              <div class="agent__name">Gohan <span class="agent__live">●</span></div>
-              <div class="agent__role">Contenido</div>
-              <div class="agent__bar"><i></i></div>
-              <div class="agent__status status">En reposo</div>
-            </div>
-          </article>
-
-          <article class="agent agent--boss" data-key="goku">
-            <div class="agent__halo"></div>
-            <div class="agent__stage"><div class="char"></div></div>
-            <div class="agent__meta">
-              <div class="agent__name">Goku <span class="agent__crown">👑</span> <span class="agent__live">●</span></div>
-              <div class="agent__role">Revisor</div>
-              <div class="agent__bar"><i></i></div>
-              <div class="agent__status status">En reposo</div>
-            </div>
-          </article>
-        </div>
+        <div class="panel__head"><h2>▣ Escuadrón</h2><span class="panel__sub">5 operativos · se conectan y ejecutan en tiempo real</span></div>
+        <div class="roster" id="roster"></div>
       </section>
 
       <!-- ░░ MISSION CONTROL ░░ -->
       <section class="controls">
         <div class="card control">
-          <div class="control__title">⚡ Buscar clientes</div>
-          <p class="control__hint">Krillin sale a buscar empresas reales que dan crédito a cuotas.</p>
-          <div class="field">
-            <label>País o ciudad</label>
-            <input id="mercado" type="text" placeholder="Ej: Colombia, Bogotá…" />
-          </div>
-          <div class="field">
-            <label>Tipo de empresa</label>
-            <input id="tipo" type="text" value="financieras y distribuidoras de motos que dan crédito" />
-          </div>
+          <div class="control__title">▶ Rastrear objetivos</div>
+          <p class="control__hint">SCOUT despliega y localiza empresas reales que dan crédito a cuotas.</p>
+          <div class="field"><label>// país o ciudad</label><input id="mercado" type="text" placeholder="Ej: Colombia, Bogotá…" /></div>
+          <div class="field"><label>// tipo de objetivo</label><input id="tipo" type="text" value="financieras y distribuidoras de motos que dan crédito" /></div>
           <div class="field field--row">
-            <div>
-              <label>Cantidad</label>
-              <input id="cantidad" type="number" value="3" min="1" max="25" />
-            </div>
-            <button id="startBtn" class="btn btn--primary">⚡ Lanzar misión</button>
+            <div><label>// cantidad</label><input id="cantidad" type="number" value="3" min="1" max="25" /></div>
+            <button id="startBtn" class="btn btn--primary">▶ EJECUTAR</button>
           </div>
         </div>
-
         <div class="card control">
-          <div class="control__title">📝 Crear contenido</div>
-          <p class="control__hint">Gohan escribe posts de autoridad para tu LinkedIn.</p>
-          <div class="field">
-            <label>Tema del contenido</label>
-            <input id="tema" type="text" value="cómo reducir la mora en financiamiento a cuotas" />
-          </div>
-          <div class="field field--row">
-            <span class="control__spacer"></span>
-            <button id="contentBtn" class="btn btn--secondary">📝 Generar contenido</button>
-          </div>
+          <div class="control__title">✎ Generar contenido</div>
+          <p class="control__hint">SCRIBE redacta posts de autoridad para LinkedIn.</p>
+          <div class="field"><label>// tema</label><input id="tema" type="text" value="cómo reducir la mora en financiamiento a cuotas" /></div>
+          <div class="field field--row"><span class="control__spacer"></span><button id="contentBtn" class="btn btn--secondary">✎ COMPILAR</button></div>
         </div>
       </section>
 
-      <!-- ░░ PIPELINE + ACTIVITY ░░ -->
+      <!-- ░░ BOARD ░░ -->
       <section class="board">
         <div class="card board__main">
           <div class="tabs" role="tablist">
-            <button class="tab is-active" data-tab="pending">Por revisar <span class="pill" id="tabPending">0</span></button>
-            <button class="tab" data-tab="ready">Listos <span class="pill" id="tabReady">0</span></button>
-            <button class="tab" data-tab="content">Contenido <span class="pill" id="tabContent">0</span></button>
-            <a class="tab tab--export" href="/api/leads.csv">⬇️ CSV</a>
+            <button class="tab is-active" data-tab="pending">// en cola <span class="pill" id="tabPending">0</span></button>
+            <button class="tab" data-tab="ready">// pipeline <span class="pill" id="tabReady">0</span></button>
+            <button class="tab" data-tab="content">// contenido <span class="pill" id="tabContent">0</span></button>
+            <a class="tab tab--export" href="/api/leads.csv">⬇ export.csv</a>
           </div>
           <div class="tabpanes">
             <div class="tabpane is-active" data-pane="pending"><div id="leads"></div></div>
@@ -166,9 +76,8 @@
             <div class="tabpane" data-pane="content"><div id="posts"></div></div>
           </div>
         </div>
-
         <div class="card feed">
-          <div class="feed__head"><span class="feed__pulse"></span> Actividad en vivo</div>
+          <div class="feed__head"><span class="feed__pulse"></span> ░ log del sistema</div>
           <div id="log" class="feed__list"></div>
         </div>
       </section>
