@@ -179,15 +179,18 @@ async function vegetaRedacta(lead, info, brief) {
     const text = await ask({
       role: "worker",
       system:
-        "Eres un copywriter de ventas B2B directo y humano. Escribes mensajes de outreach cortos (máx 90 palabras), sin sonar a spam ni a IA. Idioma: español de LATAM. REGLAS DE HONESTIDAD: nunca afirmes ni asumas problemas internos del prospecto que no puedas saber. Presenta el caso de éxito propio como dato verificable, no como promesa para ellos.",
+        "Eres un copywriter de ventas B2B cálido y MUY humano (que no suene a IA ni a plantilla). Escribes en nombre de MABEN, una empresa que desarrolla software a la medida (web: maben.io, email: info@maben.io). Mensajes cortos y concisos (90-120 palabras), en español de LATAM, con un toque cercano. REGLAS DE HONESTIDAD: nunca afirmes ni asumas problemas internos del prospecto que no puedas saber; presenta el caso de éxito propio como dato verificable, no como promesa para ellos.",
       prompt: `Escribe un mensaje de LinkedIn/email para ${saludo} de "${lead.empresa}".
-Producto: PAGASI, sistema de gestión de créditos a cuotas.
+Quién escribe: Maben (software a la medida). Producto estrella: PAGASI, sistema de gestión de créditos a cuotas.
 Investigación de Piccolo sobre esta empresa:
 - Perfil: ${info.perfil || "(n/d)"}
 - Ángulo/gancho más fuerte: ${info.gancho || lead.senal || "da crédito a cuotas"}
 - Reto probable (hipótesis honesta): ${info.dolor_probable || "(n/d)"}
-Caso de éxito real que DEBES usar, con contexto: "una financiera de motos gestiona hoy 100+ créditos activos con 0% de morosidad usando PAGASI". Preséntalo como resultado nuestro con un cliente, NO como algo garantizado para ellos.
-Abre conectando con el gancho específico. Cierra con una pregunta suave para una demo. Devuelve SOLO el texto del mensaje.`,
+Estructura: saludo cálido → preséntate en una línea como Maben → conecta con el gancho específico de forma humana → menciona el caso real con contexto: "un cliente nuestro, financiera de motos, maneja hoy 100+ créditos activos con 0% de morosidad usando PAGASI" (resultado nuestro con un cliente, NO promesa para ellos) → cierra con una pregunta suave para 20 min, sin compromiso.
+Firma así al final:
+"[Tu nombre] · Maben
+🌐 maben.io · ✉️ info@maben.io"
+Devuelve SOLO el texto del mensaje.`,
     });
     mensaje = text;
   }
@@ -437,5 +440,15 @@ function simPiccolo(lead) {
 
 function simMensaje(lead, info = {}) {
   const saludo = info.contacto_nombre || `equipo de ${lead.empresa}`;
-  return `Hola ${saludo}. Vi que ${(info.gancho || lead.senal || "financian a cuotas").toLowerCase()}. Ayudamos a una financiera de motos a gestionar 100+ créditos con control total y 0% de morosidad usando PAGASI, nuestro sistema de gestión de créditos a cuotas (amortización, cobranza, comisiones y reportes en tiempo real). ¿Tendrían 15 min esta semana para una demo rápida adaptada a ${lead.sector?.toLowerCase() || "su operación"}?`;
+  return `Hola ${saludo}, ¿cómo va todo?
+
+Te escribo de Maben — desarrollamos software a la medida para empresas que dan crédito. Vi que ${(info.gancho || lead.senal || "financian a cuotas").toLowerCase()}.
+
+Tenemos un cliente muy parecido a ustedes que hoy maneja 100+ créditos activos con 0% de morosidad usando PAGASI, nuestro sistema, automatizando los recaudos sin carga extra para su equipo.
+
+¿Te late si nos tomamos 20 minutos esta semana y vemos si tiene sentido para ${lead.empresa}? Sin compromiso.
+
+Un abrazo,
+[Tu nombre] · Maben
+🌐 maben.io · ✉️ info@maben.io`;
 }

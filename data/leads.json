@@ -16,7 +16,7 @@
     "email": "comercial@maxcredito.com.co",
     "mensaje": "Hola,\n\nVi que Max Crédito aprueba créditos en 15 minutos—ágil operación para una financiera regional.\n\nEl cuello de botella que solemos ver en financieras de motos aparece después del desembolso: la cobranza manual consume recursos y la mora puede escalar rápido cuando el volumen crece.\n\nTenemos un cliente en un modelo similar al tuyo que hoy opera con 100+ créditos activos y 0% de morosidad en su cartera gestionada con PAGASI. Lo logra automatizando recaudos directos vía Bancolombia, sin intermediarios y sin carga operativa para su equipo.\n\n¿Te parece si conversamos 20 minutos para ver si tiene sentido para Max Crédito?",
     "notaRevisor": "El fit es sólido: financiera de motos PYME en Colombia, dolor real de cobranza post-aprobación, y la integración con Bancolombia es relevante. El dato '100+ créditos activos con 0% de morosidad' es válido como resultado de un cliente real, pero el mensaje original lo presenta de forma ambigua ('gestiona hoy... con 0% de morosidad') sin aclarar que es un resultado puntual de ese cliente en un momento dado, lo que podría leerse como garantía. Se corrige para contextualizarlo correctamente. También se suaviza la suposición sobre 'segmentos de bajos ingresos' que puede percibirse como un juicio sobre los clientes de Max Crédito.",
-    "status": "pending",
+    "status": "approved",
     "createdAt": "2026-05-29T17:35:47.752Z"
   },
   {
